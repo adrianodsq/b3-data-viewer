@@ -1,4 +1,4 @@
--- Cria um docket com credenciais padrao
+-- Cria um docker com credenciais padrao
 -- docker run --rm   --name pg-docker -e POSTGRES_PASSWORD=postgres -d -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data  postgres
 -- user: postgres
 -- password: postgres
