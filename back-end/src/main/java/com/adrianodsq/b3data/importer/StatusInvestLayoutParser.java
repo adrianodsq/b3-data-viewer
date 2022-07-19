@@ -1,9 +1,7 @@
 package com.adrianodsq.b3data.importer;
 
-import com.adrianodsq.b3data.repository.B3AcoesHistRepository;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
@@ -15,6 +13,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import com.adrianodsq.b3data.repository.HistoricalFinancialDataRepositoryFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -27,15 +26,21 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class StatusInvestLayoutParser {
 
-    @Autowired B3AcoesHistRepository b3AcoesHistRepository;
+    @Autowired
+    private HeaderFieldMapper headerFieldMapper;
 
     @Autowired
-    HeaderFieldMapper headerFieldMapper;
+    private MapBasedParserService mapBasedParserService;
+
+    @Autowired
+    private HistoricalFinancialDataRepositoryFacade historicalFinancialDataRepositoryFacade;
 
     @Value("${b3data.data.base-folder}")
     private String baseFolder;
 
     private static final DateParser DATE_PARSER = FastDateFormat.getInstance("yyyy_MM_dd");
+
+    private static final int FIRST_LINE = 0;
 
     public ImportDataResult importDataFromFile(String fileName){
         Path p = Paths.get(baseFolder, fileName);
@@ -44,13 +49,20 @@ public class StatusInvestLayoutParser {
         return importDataFromFile(input);
     }
 
-    public  ImportDataResult importDataFromFile(File input){
+
+    public ImportDataResult importDataFromFile(File input){
         if(input.exists()){
             return extractDataFromFile(input);
         }else{
+            log.warn("Failed to find file={}", input);
             return null;
         }
+    }
 
+    private String getFinancialTypeFromFilename(File someFile){
+        // example: 2022_06_05-acoes.csv
+        // TO-DO test pattern
+        return someFile.getName().split("-")[1].split("\\.")[0];
     }
 
     private Date getDateFromFileName(File input){
@@ -70,11 +82,14 @@ public class StatusInvestLayoutParser {
 
     public ImportDataResult extractDataFromFile(File input){
         Map<Integer, String> headerMap = new HashMap<>();
-        Map<String, Field> mapOfFieldsByAnnotation = headerFieldMapper.getMapOfFields();
+        // Infos from filename
+        String financialType = getFinancialTypeFromFilename(input);
+        Date dateOfInfo = getDateFromFileName(input);
+
+        FinancialDataParser parser = mapBasedParserService.getParser(financialType);
         ImportDataResult result = new ImportDataResult();
 
         log.info("file={} step=start", input.getName());
-        Date dateOfInfo = getDateFromFileName(input);
 
         ExecutorService executor = Executors.newFixedThreadPool(5);
         try {
@@ -82,98 +97,53 @@ public class StatusInvestLayoutParser {
             log.debug("Starting file processing lines={}", lines.size());
             for(int currentLineIndex = 0; currentLineIndex < lines.size(); currentLineIndex++){
                 if(isHeader(currentLineIndex)){
-                    String[] headers = lines.get(currentLineIndex).split(";");
-
-                    for(int h = 0; h < headers.length; h++){
-                        headerMap.put(h, trim(headers[h].toLowerCase()));
-                    }
-
-                    if(headers.length != mapOfFieldsByAnnotation.size()){
-                        log.warn("m=extractDataFromFile File have different amount of data file={} headers={} objFields={}", input.getName(), headers.length, mapOfFieldsByAnnotation.size());
-                    }
+                    extractHeaderToMapOfFields(input.getName(), headerMap, parser, lines);
                 }else{
-
-                    B3AcoesHist row = new B3AcoesHist();
+                    HistoricalFinancialData row = parser.parseData(lines.get(currentLineIndex), headerMap);
                     row.setInfoDate(dateOfInfo);
-                    setValue(row, headerMap, mapOfFieldsByAnnotation, currentLineIndex, lines.get(currentLineIndex));
-                    result.addSuccess();
 
                     executor.submit(() -> {
                         long start = System.currentTimeMillis();
-                        b3AcoesHistRepository.save(row);
+                        historicalFinancialDataRepositoryFacade.save(row);
                         long end = System.currentTimeMillis();
-                        //log.info("file={} row={} step=save exec={}", input.getName(), row.getTicker(), (end-start));
+                        log.debug("file={} row={} step=save exec={}", input.getName(), row.getTicker(), (end-start));
                     });
+
+                    result.addSuccess();
                 }
             }
             executor.shutdown();
             try {
                 executor.awaitTermination(30, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
-                log.error("Failed to read file ex={}",  e);
+                log.error("Failed to read file={}", input.getName(),  e);
                 e.printStackTrace();
             }
             log.info("file={} step=end", input.getName());
         }catch (IOException ioEx){
-            log.error("Failed to read file ex={}", ioEx);
+            log.error("Failed to read file={}", input.getName(), ioEx);
         }
         return result;
+    }
+
+    private void extractHeaderToMapOfFields(String filename, Map<Integer, String> headerMap, FinancialDataParser parser, List<String> lines) {
+        String[] headers = lines.get(FIRST_LINE).split(";");
+
+        for(int h = 0; h < headers.length; h++){
+            headerMap.put(h, trim(headers[h].toLowerCase()));
+        }
+
+        if(headers.length != parser.getMapOfFieldsByAnnotation().size()){
+            log.warn("m=extractDataFromFile File have different amount of data file={} headers={} objFields={}", filename, headers.length, parser.getMapOfFieldsByAnnotation().size());
+        }
     }
 
     private String trim(String str){
         return StringUtils.trim(str);
     }
 
-    private void setValue(B3AcoesHist row, Map <Integer, String> headerMap, Map<String, Field> mapOfFieldsByAnnotation, int index, String line){
-        String[] values = line.split(";");
-
-        for(int h = 0; h < values.length; h++){
-            final String column = headerMap.get(h);
-            if(column != null){
-                final Field field = mapOfFieldsByAnnotation.get(column.toLowerCase());
-                if (field != null){
-                    try {
-                        field.setAccessible(true);
-                        if(field.getType().equals(Float.class)) {
-                            field.set(row, toDatabase(values[h]));
-                        }else{
-                            field.set(row, values[h]);
-                        }
-                    } catch (Exception e) {
-                        log.error("{}", e);
-                    }
-                }else{
-                    log.warn("Failed to find field column={} val={} line={}", column, values[h],line);
-                }
-            }else{
-                System.out.println("Failed to find column " + column);
-            }
-        }
-
-    }
-
-    // 3.123,67 to 3123.67
-    private String parseNumberToDatabaseFormat(final String value){
-        if(StringUtils.isNotBlank(value)){
-            String withoutDots = StringUtils.replace(value, ".", "");
-            String replacingCommas = StringUtils.replace(withoutDots, ",", ".");
-
-            return replacingCommas;
-        }
-        return null;
-    }
-
     private boolean isHeader(int i){
         return i == 0;
     }
-
-    private Float toDatabase(final String val){
-        String result = parseNumberToDatabaseFormat(val);
-        if(result != null)
-            return Float.valueOf(result);
-        else
-            return null;
-    }
-
 
 }

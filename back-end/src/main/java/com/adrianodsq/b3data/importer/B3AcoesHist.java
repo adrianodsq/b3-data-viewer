@@ -7,13 +7,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.ToString;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
 @ToString
 @Table(name = "B3_ACOES_HISTORICO")
 @Entity
-public class B3AcoesHist {
+@FinancialData("ACOES")
+@Component
+public class B3AcoesHist extends HistoricalFinancialData {
 
     @Column(name = "ID_ACOES_HIST")
     @Id
@@ -143,20 +146,20 @@ public class B3AcoesHist {
     @Column(name = "VALOR_DE_MERCADO")
     private Float valorDeMercado;
 
-    public Date getInfoDate() {
-        return infoDate;
-    }
-
-    public void setInfoDate(Date infoDate) {
-        this.infoDate = infoDate;
-    }
-
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Date getInfoDate() {
+        return infoDate;
+    }
+
+    public void setInfoDate(Date infoDate) {
+        this.infoDate = infoDate;
     }
 
     public String getTicker() {

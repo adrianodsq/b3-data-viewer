@@ -38,10 +38,10 @@
 	<!-- QUAST APP -->
 	<script src="js/app.js"></script>
 	<script src="js/service.js"></script>
-	<script src="js/acoes-controller.js"></script>
+	<script src="js/fiis-controller.js"></script>
 </head>
 
-<body ng-app="app" ng-controller="AcoesCtrl as Ctrl">
+<body ng-app="app" ng-controller="FiisController as Ctrl">
 	<nav class="navbar justify-content-between navbar navbar-dark bg-dark">
 		<a class="navbar-brand qst-navbar-color"><i class="fas fa-chart-line"></i> Quack B3 Viewer</a>
 		<a class="qst-navbar-color qst-navbar-menu" style="cursor: pointer;" onclick="openNav()"><i
@@ -82,100 +82,46 @@
 	<div class="container-fluid ">
 		<div class="main">
 			<div class="row">
-				<div class="col-md-3 chart-box">
+				<div class="col-md-4 chart-box">
+					<canvas id="ultimoDividendoChart"></canvas>
+				</div>
+				<div class="col-md-4">
 					<canvas id="dividendYieldChart"></canvas>
 				</div>
-				<div class="col-md-3">
-					<canvas id="valorPorAcaoChart"></canvas>
-				</div>
-				<div class="col-md-3">
-					<canvas id="lucroPorAcaoChart"></canvas>
-				</div>
-				<div class="col-md-3">
+				<div class="col-md-4">
 					<canvas id="precoValorPatrimonialChart"></canvas>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-3">
-					<canvas id="precoLucroChart"></canvas>
-				</div>
-				<div class="col-md-3">
-					<canvas id="precoEbitChart"></canvas>
-				</div>
-				<div class="col-md-3">
-					<canvas id="enterpriseValueEbitChart"></canvas>
-				</div>
-				<div class="col-md-3">
-					<canvas id="priceSalesRatioChart"></canvas>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-3">
-					<canvas id="pegRatioChart"></canvas>
-				</div>
-				<div class="col-md-3">
-					<canvas id="precoAtivoCirculanteLiquidoChart"></canvas>
-				</div>
-				<div class="col-md-3">
-					<canvas id="precoAtivosChart"></canvas>
-				</div>
-				<div class="col-md-3">
-					<canvas id="precoCapitalGiroChart"></canvas>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-3">
-					<canvas id="returnOnAssetsChart"></canvas>
-				</div>
-				<div class="col-md-3">
-					<canvas id="returnOnEquityChart"></canvas>
-				</div>
-				<div class="col-md-3">
-					<canvas id="returnOverInvestedCapitalChart"></canvas>
-				</div>
-				<div class="col-md-3">
-					<canvas id="giroAtivosChart"></canvas>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-6">
-					<canvas id="cagrLucrosChart"></canvas>
-				</div>
-				<div class="col-md-6">
-					<canvas id="cagrReceitaChart"></canvas>
-				</div>
-			</div>
-			<div class="row">
 				<div class="col-md-4">
-					<canvas id="margemBrutaChart"></canvas>
-				</div>
-				<div class="col-md-4">
-					<canvas id="margemLiquidaChart"></canvas>
-				</div>
-				<div class="col-md-4">
-					<canvas id="margemEbitChart"></canvas>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-3">
-					<canvas id="passivosSobreAtivosChart"></canvas>
-				</div>
-				<div class="col-md-3">
-					<canvas id="patrimonioSobreAtivoChart"></canvas>
-				</div>
-				<div class="col-md-3">
-					<canvas id="liquidezCorrenteChart"></canvas>
-				</div>
-				<div class="col-md-3">
-					<canvas id="liquidezMediaDiriaChart"></canvas>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-6">
 					<canvas id="precoChart"></canvas>
 				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<canvas id="percentualEmCaixaChart"></canvas>
+				</div>
+				<div class="col-md-4">
+					<canvas id="cagrDividendosChart"></canvas>
+				</div>
+				<div class="col-md-4">
+					<canvas id="cagrCotaChart"></canvas>
+				</div>
+			</div>
+			<div class="row">
 				<div class="col-md-6">
-					<canvas id="valorDeMercadoChart"></canvas>
+					<canvas id="valorPatrimonialChart"></canvas>
+				</div>
+				<div class="col-md-6">
+					<canvas id="patrimonioChart"></canvas>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<canvas id="cotistasChart"></canvas>
+				</div>
+				<div class="col-md-6">
+					<canvas id="cotasChart"></canvas>
 				</div>
 			</div>
 		</div>

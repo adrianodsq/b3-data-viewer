@@ -15,29 +15,4 @@ public interface B3AcoesHistRepository extends CrudRepository<B3AcoesHist, Long>
     )
     List<String> findAllTickers();
 
-
-    @Query(
-            nativeQuery = true,
-            value = "SELECT * FROM B3_ACOES_HISTORICO "
-                    + "WHERE TICKER = ?1 "
-                    + "ORDER BY DAT_INFO DESC "
-                    + "LIMIT 2"
-    )
-    List<B3AcoesHist> findLatestTwoRowsByTicker(String ticker);
-
-    @Query(
-            nativeQuery = true,
-            value = "SELECT * FROM b3_acoes_historico "
-                    + "WHERE DAT_INFO IN ("
-                    + "SELECT MAX(DAT_INFO) FROM b3_acoes_historico)"
-    )
-    List<B3AcoesHist> findLatestData();
-
-    @Query(
-            nativeQuery = true,
-            value = "SELECT * FROM b3_acoes_historico "
-                    + " WHERE DAT_INFO IN ("
-                    + " SELECT MAX(DAT_INFO) FROM b3_acoes_historico)"
-    )
-    List<B3AcoesHist> findLatestBarganhasData();
 }

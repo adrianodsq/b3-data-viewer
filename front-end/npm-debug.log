@@ -1,0 +1,103 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node',
+1 verbose cli   '/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   'jquery.js@3.3.1',
+1 verbose cli   '--save' ]
+2 info using npm@3.5.2
+3 info using node@v8.10.0
+4 silly loadCurrentTree Starting
+5 silly install loadCurrentTree
+6 silly install readLocalPackageData
+7 silly fetchPackageMetaData jquery.js@3.3.1
+8 silly fetchNamedPackageData jquery.js
+9 silly mapToRegistry name jquery.js
+10 silly mapToRegistry using default registry
+11 silly mapToRegistry registry https://registry.npmjs.org/
+12 silly mapToRegistry uri https://registry.npmjs.org/jquery.js
+13 verbose request uri https://registry.npmjs.org/jquery.js
+14 verbose request no auth needed
+15 info attempt registry request try #1 at 1:45:10 PM
+16 verbose request id b5bc87c171e869eb
+17 http request GET https://registry.npmjs.org/jquery.js
+18 http 200 https://registry.npmjs.org/jquery.js
+19 verbose headers { date: 'Sun, 18 Apr 2021 16:45:11 GMT',
+19 verbose headers   'content-type': 'application/json; charset=UTF-8',
+19 verbose headers   'transfer-encoding': 'chunked',
+19 verbose headers   connection: 'keep-alive',
+19 verbose headers   'set-cookie':
+19 verbose headers    [ '__cfduid=de31d3c2c2c9ecd369d90013212c46d651618764310; expires=Tue, 18-May-21 16:45:10 GMT; path=/; domain=.npmjs.org; HttpOnly; SameSite=Lax' ],
+19 verbose headers   'cf-ray': '641f5cab2fb3f863-GIG',
+19 verbose headers   'cache-control': 'public, max-age=300',
+19 verbose headers   etag: 'W/"6993821cc667e649941a76770b086e48"',
+19 verbose headers   'last-modified': 'Sun, 27 May 2018 05:29:17 GMT',
+19 verbose headers   vary: 'accept-encoding, accept',
+19 verbose headers   'cf-cache-status': 'MISS',
+19 verbose headers   'cf-request-id': '0987783ef50000f863aabf1000000001',
+19 verbose headers   'expect-ct': 'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+19 verbose headers   server: 'cloudflare',
+19 verbose headers   'content-encoding': 'gzip' }
+20 silly get cb [ 200,
+20 silly get   { date: 'Sun, 18 Apr 2021 16:45:11 GMT',
+20 silly get     'content-type': 'application/json; charset=UTF-8',
+20 silly get     'transfer-encoding': 'chunked',
+20 silly get     connection: 'keep-alive',
+20 silly get     'set-cookie':
+20 silly get      [ '__cfduid=de31d3c2c2c9ecd369d90013212c46d651618764310; expires=Tue, 18-May-21 16:45:10 GMT; path=/; domain=.npmjs.org; HttpOnly; SameSite=Lax' ],
+20 silly get     'cf-ray': '641f5cab2fb3f863-GIG',
+20 silly get     'cache-control': 'public, max-age=300',
+20 silly get     etag: 'W/"6993821cc667e649941a76770b086e48"',
+20 silly get     'last-modified': 'Sun, 27 May 2018 05:29:17 GMT',
+20 silly get     vary: 'accept-encoding, accept',
+20 silly get     'cf-cache-status': 'MISS',
+20 silly get     'cf-request-id': '0987783ef50000f863aabf1000000001',
+20 silly get     'expect-ct': 'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+20 silly get     server: 'cloudflare',
+20 silly get     'content-encoding': 'gzip' } ]
+21 verbose get saving jquery.js to /home/aquast/.npm/registry.npmjs.org/jquery.js/.cache.json
+22 silly fetchPackageMetaData Error: No compatible version found: jquery.js@3.3.1
+22 silly fetchPackageMetaData Valid install targets:
+22 silly fetchPackageMetaData 1.0.2, 0.0.2-security, 0.0.1-security
+22 silly fetchPackageMetaData
+22 silly fetchPackageMetaData     at pickVersionFromRegistryDocument (/usr/share/npm/lib/fetch-package-metadata.js:156:16)
+22 silly fetchPackageMetaData     at /usr/share/npm/node_modules/iferr/index.js:13:50
+22 silly fetchPackageMetaData     at /usr/share/npm/lib/utils/pulse-till-done.js:19:8
+22 silly fetchPackageMetaData     at saved (/usr/share/npm/lib/cache/caching-client.js:168:7)
+22 silly fetchPackageMetaData     at /usr/share/npm/node_modules/graceful-fs/polyfills.js:210:7
+22 silly fetchPackageMetaData     at FSReqWrap.oncomplete (fs.js:135:15)
+22 silly fetchPackageMetaData  error for jquery.js@3.3.1 Error: No compatible version found: jquery.js@3.3.1
+22 silly fetchPackageMetaData Valid install targets:
+22 silly fetchPackageMetaData 1.0.2, 0.0.2-security, 0.0.1-security
+22 silly fetchPackageMetaData
+22 silly fetchPackageMetaData     at pickVersionFromRegistryDocument (/usr/share/npm/lib/fetch-package-metadata.js:156:16)
+22 silly fetchPackageMetaData     at /usr/share/npm/node_modules/iferr/index.js:13:50
+22 silly fetchPackageMetaData     at /usr/share/npm/lib/utils/pulse-till-done.js:19:8
+22 silly fetchPackageMetaData     at saved (/usr/share/npm/lib/cache/caching-client.js:168:7)
+22 silly fetchPackageMetaData     at /usr/share/npm/node_modules/graceful-fs/polyfills.js:210:7
+22 silly fetchPackageMetaData     at FSReqWrap.oncomplete (fs.js:135:15)
+23 silly rollbackFailedOptional Starting
+24 silly rollbackFailedOptional Finishing
+25 silly runTopLevelLifecycles Starting
+26 silly runTopLevelLifecycles Finishing
+27 silly install printInstalled
+28 verbose stack Error: No compatible version found: jquery.js@3.3.1
+28 verbose stack Valid install targets:
+28 verbose stack 1.0.2, 0.0.2-security, 0.0.1-security
+28 verbose stack
+28 verbose stack     at pickVersionFromRegistryDocument (/usr/share/npm/lib/fetch-package-metadata.js:156:16)
+28 verbose stack     at /usr/share/npm/node_modules/iferr/index.js:13:50
+28 verbose stack     at /usr/share/npm/lib/utils/pulse-till-done.js:19:8
+28 verbose stack     at saved (/usr/share/npm/lib/cache/caching-client.js:168:7)
+28 verbose stack     at /usr/share/npm/node_modules/graceful-fs/polyfills.js:210:7
+28 verbose stack     at FSReqWrap.oncomplete (fs.js:135:15)
+29 verbose cwd /home/aquast/wst/b3-data-fe
+30 error Linux 5.4.0-71-generic
+31 error argv "/usr/bin/node" "/bin/npm" "install" "jquery.js@3.3.1" "--save"
+32 error node v8.10.0
+33 error npm  v3.5.2
+34 error No compatible version found: jquery.js@3.3.1
+34 error Valid install targets:
+34 error 1.0.2, 0.0.2-security, 0.0.1-security
+35 error If you need help, you may report this error at:
+35 error     <https://github.com/npm/npm/issues>
+36 verbose exit [ 1, true ]

@@ -3,14 +3,15 @@
 
     angular
         .module('app')
-        .controller('AppCtrl', AppCtrl);
+        .controller('AcoesCtrl', AcoesCtrl);
 
     // Injects
-    AppCtrl.$inject = ['$scope','AppService']
+    AcoesCtrl.$inject = ['$scope','AppService']
     
-    function AppCtrl($scope, AppService){
+    function AcoesCtrl($scope, AppService){
         
         var vm = this;
+        const FINANCIAL_TYPE = 'acoes';
         // Variables
         vm.currentTicker = "ABEV3";
         vm.portfolioList = [];   
@@ -33,7 +34,7 @@
 
         function _fetchDataAndRefreshCharts(){
             console.log("M=_fetchDataAndRefreshCharts ticker=" + vm.currentTicker);
-            AppService.buscaDados(vm.currentTicker, _successCallback, _genericError);
+            AppService.buscaDados(FINANCIAL_TYPE, vm.currentTicker, _successCallback, _genericError);
 
             function _successCallback(resp){
                 console.log("M=_fetchDataAndRefreshCharts inner=_successCallback");
@@ -299,10 +300,8 @@
             alert("Falha ao executar - consulte o log")
             console.log(err);
         }
-    }
 
-
-
+    } // end AcoesCtrl
     
 })();
 

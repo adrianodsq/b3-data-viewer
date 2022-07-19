@@ -26,16 +26,25 @@ public class B3DataController {
     B3AcoesHistRepository b3AcoesHistRepository;
 
     @Autowired
-    StatusInvestLayoutParser statusInvestLayoutParser;
+    B3FiisHistRepository b3FiisHistRepository;
 
     @Autowired
-    B3AcoesService b3AcoesService;
+    StatusInvestLayoutParser statusInvestLayoutParser;
+
+    @Value("${b3data.data.base-folder}")
+    private String baseFolder;
 
     // curl http://localhost:8080/b3/acoes/CYRE3
     @GetMapping("/acoes/{ticker}")
-    public @ResponseBody List<B3AcoesHist> getByTicker(@PathVariable("ticker") @NotNull final String ticker){
-
+    public @ResponseBody List<B3AcoesHist> getAcoesByTicker(@PathVariable("ticker") @NotNull final String ticker){
         return b3AcoesHistRepository.findByTickerOrderByInfoDateAsc(ticker.toUpperCase());
+
+    }
+
+    // curl http://localhost:8080/b3/fiis/HGLG11
+    @GetMapping("/fiis/{ticker}")
+    public @ResponseBody List<B3FiisHist> getFiisByTicker(@PathVariable("ticker") @NotNull final String ticker){
+        return b3FiisHistRepository.findByTickerOrderByInfoDateAsc(ticker.toUpperCase());
 
     }
 
@@ -61,15 +70,15 @@ public class B3DataController {
         }
     }
 
-    // curl -X POST http://localhost:8080/b3/import-all
-    @PostMapping("/import-all")
-    public ResponseEntity<List<ImportDataResult>> importAll(){
+    // curl -X POST http://localhost:8080/b3/{type}/import-all
+    @PostMapping("/{type}/import-all")
+    public ResponseEntity<List<ImportDataResult>> importAll(@PathVariable("type") String fileType){
         List<ImportDataResult> results = Lists.newArrayList();
         List<Path> filesToProcess = Lists.newArrayList();
-        try (Stream<Path> paths = Files.walk(Paths.get("/home/aquast/wst/b3-data/data"), 1)) {
+        try (Stream<Path> paths = Files.walk(Paths.get(baseFolder), 1)) {
             filesToProcess = paths
                     .filter(Files::isRegularFile)
-                    .filter(f -> !f.toFile().isDirectory() && (f.getFileName().toString().contains("acoes.csv")))
+                    .filter(f -> !f.toFile().isDirectory() && (f.getFileName().toString().contains(fileType)))
                     .sorted(Comparator.comparing(p -> p.toFile().getName()))
                     .collect(Collectors.toList());
 
@@ -88,14 +97,6 @@ public class B3DataController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(tickers);
-    }
-
-    // curl http://localhost:8080/b3/distortions
-    @GetMapping("/distortions")
-    public ResponseEntity<Set<String>> getAllDistortions(){
-        Map<String, List<String>> distortionList = b3AcoesService.findDistortionsOnNewerData();
-
-        return ResponseEntity.ok(distortionList.keySet());
     }
 
 }

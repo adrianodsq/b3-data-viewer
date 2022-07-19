@@ -13,13 +13,16 @@ app.use(express.json());
 app.use(express.static('public'));
 
 
-// curl http://localhost:8785/ticker/cyre3
-app.get('/ticker/:someTicker', function(req, res) {
+// curl http://localhost:8785/acoes/cyre3
+// curl http://localhost:8785/fiis/hglg11
+app.get('/:financialType/:someTicker', function(req, res) {
 
+    var financialType = req.params.financialType;
     var ticker = req.params.someTicker;
+    
     console.log("M=getTicker step=start param=" + ticker);
-    // Exemplo - http://localhost:8080/acoes/cyre3
-    var url = B3_APP_URL + "/b3/acoes/" + ticker.toUpperCase();
+    // Exemplo - http://localhost:8080/b3/acoes/cyre3
+    var url = B3_APP_URL + "/b3/" + financialType + "/" + ticker.toUpperCase();
     
     axios.get(url)
     .then(resp => {
@@ -85,7 +88,13 @@ app.post('/portfolio/:somePortfolio/', function(req, res) {
 
 // viewed at http://localhost:8785
 app.get('/', function(req, res) {
+    console.log("page=home")
     res.sendFile(path.join(__dirname + '/public/home.html'));
+});
+
+app.get('/fiis', function(req, res) {
+    console.log("page=fiis")
+    res.sendFile(path.join(__dirname + '/public/fiis.html'));
 });
 
 

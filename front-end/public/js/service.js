@@ -23,8 +23,8 @@
         }
 
 
-        function _buscaDados(someTicker, successFunc, failureFunc){
-            var endpoint = url + '/ticker/' + someTicker
+        function _buscaDados(financialType, someTicker, successFunc, failureFunc){
+            var endpoint = url + '/' + financialType + '/' + someTicker
             console.log("M=_buscaDados step=start endpoint=" + endpoint)
             $http.get(endpoint).then(successFunc, failureFunc);
             console.log("M=_buscaDados step=end endpoint=" + endpoint)
