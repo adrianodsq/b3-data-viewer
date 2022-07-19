@@ -20,4 +20,8 @@ npm install express
 
 npm install axios
 ``` 
-Execute a aplicação com o comando `node server.js`. 
+Execute a aplicação com o comando `node server.js`. Esta aplicação sobe na porta 8785
+
+Assim que a app subir é só acessar no navegador:
+Ações: http://localhost:8785/
+Fiis: http://localhost:8785/fiis
