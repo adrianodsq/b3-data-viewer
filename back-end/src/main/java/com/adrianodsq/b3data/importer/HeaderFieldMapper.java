@@ -69,6 +69,6 @@ public class HeaderFieldMapper {
     }
 
     private String getIndicatorName(Field someField){
-        return  someField.getAnnotation(FinancialData.class).value().toUpperCase().trim();
+        return  someField.getAnnotation(FinancialData.class).value().toLowerCase().trim();
     }
 }
