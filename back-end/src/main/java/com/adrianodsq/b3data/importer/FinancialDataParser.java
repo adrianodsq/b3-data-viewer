@@ -36,7 +36,7 @@ public abstract class FinancialDataParser<T extends HistoricalFinancialData> {
                         log.error("Failed to parse type={} line={}", getFinancialDataType(), line, e);
                     }
                 }else{
-                    log.warn("Failed to find field column={} val={} line={}", column, values[h],line);
+                    log.warn("Failed to find field column={} val={} line={}", column, values[h], line);
                 }
             }else{
                 log.warn("Failed to find field h={} val={} line={}", h, values[h],line);
@@ -53,7 +53,7 @@ public abstract class FinancialDataParser<T extends HistoricalFinancialData> {
     }
 
     private Field getFieldFromColumn(final String columnName){
-        return getMapOfFieldsByAnnotation().get(columnName.toLowerCase());
+        return getMapOfFieldsByAnnotation().get(columnName);
     }
 
     // 3.123,67 to 3123.67

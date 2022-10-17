@@ -89,7 +89,7 @@ public class StatusInvestLayoutParser {
         FinancialDataParser parser = mapBasedParserService.getParser(financialType);
         ImportDataResult result = new ImportDataResult();
 
-        log.info("file={} step=start", input.getName());
+        log.info("file={} step=start parser={}", input.getName(), parser.getFinancialDataType());
 
         ExecutorService executor = Executors.newFixedThreadPool(5);
         try {

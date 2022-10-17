@@ -4,6 +4,7 @@ import lombok.ToString;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @ToString
@@ -11,7 +12,7 @@ import java.util.Date;
 @Entity
 @FinancialData("FIIS")
 @Component
-public class B3FiisHist extends HistoricalFinancialData {
+public class B3FiisHist extends HistoricalFinancialData implements Serializable {
 
     //TICKER;PRECO;ULTIMO DIVIDENDO;DY;VALOR PATRIMONIAL COTA;P/VP;LIQUIDEZ MEDIA DIARIA;PERCENTUAL EM CAIXA;CAGR DIVIDENDOS 3 ANOS; CAGR VALOR CORA 3 ANOS;PATRIMONIO;N COTISTAS;GESTAO; N COTAS
     //VIFI11;7,03;0,060000;10,87;9,02;0,78;103.042,17;6,27;;;72.998.190,19;5.659,00;Ativa;8.089.190,00

@@ -12,7 +12,7 @@ app.use(express.json());
 // Arquivos estaticos serao procurados na pasta public
 app.use(express.static('public'));
 
-
+// curl http://localhost:8785/stocks/nvda
 // curl http://localhost:8785/acoes/cyre3
 // curl http://localhost:8785/fiis/hglg11
 app.get('/:financialType/:someTicker', function(req, res) {
@@ -95,6 +95,16 @@ app.get('/', function(req, res) {
 app.get('/fiis', function(req, res) {
     console.log("page=fiis")
     res.sendFile(path.join(__dirname + '/public/fiis.html'));
+});
+
+app.get('/stocks', function(req, res) {
+    console.log("page=stocks")
+    res.sendFile(path.join(__dirname + '/public/stocks.html'));
+});
+
+app.get('/reits', function(req, res) {
+    console.log("page=reits")
+    res.sendFile(path.join(__dirname + '/public/reits.html'));
 });
 
 

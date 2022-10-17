@@ -29,6 +29,12 @@ public class B3DataController {
     B3FiisHistRepository b3FiisHistRepository;
 
     @Autowired
+    StocksHistRepository stocksHistRepository;
+
+    @Autowired
+    ReitsHistRepository reitsHistRepository;
+
+    @Autowired
     StatusInvestLayoutParser statusInvestLayoutParser;
 
     @Value("${b3data.data.base-folder}")
@@ -45,7 +51,18 @@ public class B3DataController {
     @GetMapping("/fiis/{ticker}")
     public @ResponseBody List<B3FiisHist> getFiisByTicker(@PathVariable("ticker") @NotNull final String ticker){
         return b3FiisHistRepository.findByTickerOrderByInfoDateAsc(ticker.toUpperCase());
+    }
 
+    // curl http://localhost:8080/b3/stocks/NVDA
+    @GetMapping("/stocks/{ticker}")
+    public @ResponseBody List<StocksHist> getStocksByTicker(@PathVariable("ticker") @NotNull final String ticker){
+        return stocksHistRepository.findByTickerOrderByInfoDateAsc(ticker.toUpperCase());
+    }
+
+    // curl http://localhost:8080/b3/reits/AMT
+    @GetMapping("/reits/{ticker}")
+    public @ResponseBody List<ReitsHist> getReitsByTicker(@PathVariable("ticker") @NotNull final String ticker){
+        return reitsHistRepository.findByTickerOrderByInfoDateAsc(ticker.toUpperCase());
     }
 
     @GetMapping("/data")
@@ -69,6 +86,7 @@ public class B3DataController {
             return ResponseEntity.ok(result);
         }
     }
+
 
     // curl -X POST http://localhost:8080/b3/{type}/import-all
     @PostMapping("/{type}/import-all")

@@ -1,25 +1,20 @@
 package com.adrianodsq.b3data.importer;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
 @ToString
-@Table(name = "B3_ACOES_HISTORICO")
+@Table(name = "REITS_HIST")
 @Entity
-@FinancialData("ACOES")
+@FinancialData("REITS")
 @Component
-public class B3AcoesHist extends HistoricalFinancialData implements Serializable {
+public class ReitsHist extends HistoricalFinancialData implements Serializable {
 
-    @Column(name = "ID_ACOES_HIST")
+    @Column(name = "ID_REITS_HIST")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -402,4 +397,5 @@ public class B3AcoesHist extends HistoricalFinancialData implements Serializable
     public void setValorDeMercado(Float valorDeMercado) {
         this.valorDeMercado = valorDeMercado;
     }
+
 }

@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+	<title>Quack B3 viewer</title>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+		integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+	<meta name="description" content="The HTML5 Herald">
+	<meta name="author" content="AdrianoDSQ">
+
+	<!-- BOOTSTRAP -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"></script>
+
+	<!-- CHARTS  -->
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+	<!-- ANGULAR -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.11/angular-resource.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.11/angular.min.js"></script>
+
+	<!-- QUAST APP -->
+	<script src="js/app.js"></script>
+	<script src="js/service.js"></script>
+	<script src="js/stocks-controller.js"></script>
+</head>
+
+<body ng-app="app" ng-controller="StocksCtrl as Ctrl">
+	<nav class="navbar justify-content-between navbar navbar-dark bg-dark">
+		<a class="navbar-brand qst-navbar-color"><i class="fas fa-chart-line"></i> Quack B3 Viewer</a>
+		<a class="qst-navbar-color qst-navbar-menu" style="cursor: pointer;" onclick="openNav()"><i
+				class="fas fa-bars"></i> Menu</a>
+		<form class="form-inline">
+			<div class="input-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text" id="basic-addon1">Ticker</span>
+				</div>
+				<input type="text" ng-model="Ctrl.currentTicker" type="search" class="form-control" placeholder="Ticker"
+					aria-label="Ticker" aria-describedby="basic-addon1">
+				<button class="btn btn-info" ng-keydown="$event.keyCode === 32 && Ctrl.fetchDataAndRefreshCharts()"
+					ng-click="Ctrl.fetchDataAndRefreshCharts()" type="submit">Buscar</button>
+			</div>
+		</form>
+	</nav>
+	<div id="mySidenav" class="sidenav">
+		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+
+		<div ng-repeat="portfolio in Ctrl.portfolioList track by portfolio.name">
+			<button class="dropdown-btn qst-dropdown-portfolio" >{{portfolio.name}}
+				<i class="fa fa-caret-down"></i>
+			</button>
+			<div class="dropdown-container">
+				<a ng-repeat="ticker in portfolio.tickerList track by $index" ng-click="Ctrl.currentTicker = ticker; Ctrl.fetchDataAndRefreshCharts()"  href="#">{{ticker}}</a>
+			</div>
+		</div>
+		
+		<button class="dropdown-btn">Distorções
+			<i class="fa fa-caret-down"></i>
+		</button>
+		<div class="dropdown-container">
+			
+			<a href="#">Link 3</a>
+		</div>
+		<a href="#" ng-click="Ctrl.toggleModal()">Gerenciar</a>
+	</div>
+	<div class="container-fluid ">
+		<div class="main">
+			<div class="row">
+				<div class="col-md-3 chart-box">
+					<canvas id="dividendYieldChart"></canvas>
+				</div>
+				<div class="col-md-3">
+					<canvas id="valorPorAcaoChart"></canvas>
+				</div>
+				<div class="col-md-3">
+					<canvas id="lucroPorAcaoChart"></canvas>
+				</div>
+				<div class="col-md-3">
+					<canvas id="precoValorPatrimonialChart"></canvas>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-3">
+					<canvas id="precoLucroChart"></canvas>
+				</div>
+				<div class="col-md-3">
+					<canvas id="precoEbitChart"></canvas>
+				</div>
+				<div class="col-md-3">
+					<canvas id="enterpriseValueEbitChart"></canvas>
+				</div>
+				<div class="col-md-3">
+					<canvas id="priceSalesRatioChart"></canvas>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-3">
+					<canvas id="pegRatioChart"></canvas>
+				</div>
+				<div class="col-md-3">
+					<canvas id="precoAtivoCirculanteLiquidoChart"></canvas>
+				</div>
+				<div class="col-md-3">
+					<canvas id="precoAtivosChart"></canvas>
+				</div>
+				<div class="col-md-3">
+					<canvas id="precoCapitalGiroChart"></canvas>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-3">
+					<canvas id="returnOnAssetsChart"></canvas>
+				</div>
+				<div class="col-md-3">
+					<canvas id="returnOnEquityChart"></canvas>
+				</div>
+				<div class="col-md-3">
+					<canvas id="returnOverInvestedCapitalChart"></canvas>
+				</div>
+				<div class="col-md-3">
+					<canvas id="giroAtivosChart"></canvas>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<canvas id="cagrLucrosChart"></canvas>
+				</div>
+				<div class="col-md-6">
+					<canvas id="cagrReceitaChart"></canvas>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<canvas id="margemBrutaChart"></canvas>
+				</div>
+				<div class="col-md-4">
+					<canvas id="margemLiquidaChart"></canvas>
+				</div>
+				<div class="col-md-4">
+					<canvas id="margemEbitChart"></canvas>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-3">
+					<canvas id="passivosSobreAtivosChart"></canvas>
+				</div>
+				<div class="col-md-3">
+					<canvas id="patrimonioSobreAtivoChart"></canvas>
+				</div>
+				<div class="col-md-3">
+					<canvas id="liquidezCorrenteChart"></canvas>
+				</div>
+				<div class="col-md-3">
+					<canvas id="liquidezMediaDiriaChart"></canvas>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<canvas id="precoChart"></canvas>
+				</div>
+				<div class="col-md-6">
+					<canvas id="valorDeMercadoChart"></canvas>
+				</div>
+			</div>
+		</div>
+		<div id="portfolioManagerModal" class="modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+			  <div class="modal-content">
+				<div class="modal-header">
+				  <h5 class="modal-title">Gerenciar carteiras</h5>
+				  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				  </button>
+				</div>
+				<div class="modal-body">
+					<div ng-repeat="portfolio in Ctrl.portfolioList track by portfolio.name" class="input-group mb-3">
+						<div class="input-group-prepend">
+						  <span class="input-group-text" id="basic-addon1">{{portfolio.name}}</span>
+						</div>
+						<input ng-model="portfolio.tickerList"type="text" class="form-control" aria-describedby="basic-addon1">
+						<button ng-click="Ctrl.savePortfolio($index)" type="button" class="btn btn-info">Salvar</button>
+						<button ng-click="Ctrl.excludePortfolio($index)" type="button" class="btn btn-warning">Excluir</button>
+					  </div> 
+				</div>
+				<div class="modal-footer">
+				  <button type="button" class="btn btn-primary">Save changes</button>
+				  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			  </div>
+			</div>
+		  </div>
+	</div>
+</body>
+<script>
+	function openNav() {
+		document.getElementById("mySidenav").style.width = "250px";
+	}
+
+	function closeNav() {
+		document.getElementById("mySidenav").style.width = "0";
+	}
+</script>
+
+<style>
+	body {
+		margin: 0;
+		font-family: "Lato", sans-serif;
+	}
+
+	.navbar {
+		z-index: 1000;
+		overflow: hidden;
+		background-color: #333;
+		position: fixed;
+		top: 0;
+		width: 100%;
+	}
+
+	.navbar a {
+		float: left;
+		display: block;
+		text-align: center;
+		padding: 14px 16px;
+		text-decoration: none;
+		font-size: 17px;
+	}
+
+	.qst-navbar-color {
+		color: #fff !important
+	}
+
+	.main {
+		padding-top: 65px;
+		margin-top: 30px;
+	}
+
+	/* The side navigation menu */
+	.sidenav {
+		height: 100%;
+		/* 100% Full-height */
+		width: 0;
+		/* 0 width - change this with JavaScript */
+		position: fixed;
+		/* Stay in place */
+		z-index: 1005;
+		/* Stay on top */
+		top: 0;
+		/* Stay at the top */
+		left: 0;
+		background-color: #111;
+		/* Black*/
+		overflow-x: hidden;
+		/* Disable horizontal scroll */
+		padding-top: 60px;
+		/* Place content 60px from the top */
+		transition: 0.5s;
+		/* 0.5 second transition effect to slide in the sidenav */
+	}
+
+	/* The navigation menu links */
+	.sidenav a {
+		padding: 8px 8px 8px 32px;
+		text-decoration: none;
+		font-size: 25px;
+		color: #818181;
+		display: block;
+		transition: 0.3s;
+	}
+
+	/* When you mouse over the navigation links, change their color */
+	.sidenav a:hover {
+		color: #f1f1f1;
+	}
+
+	/* Style the sidenav links and the dropdown button */
+	.sidenav a,
+	.dropdown-btn {
+		padding: 6px 8px 6px 16px;
+		text-decoration: none;
+		font-size: 20px;
+		color: #818181;
+		display: block;
+		border: none;
+		background: none;
+		width: 100%;
+		text-align: left;
+		cursor: pointer;
+		outline: none;
+	}
+
+	/* On mouse-over */
+	.sidenav a:hover,
+	.dropdown-btn:hover {
+		color: #f1f1f1;
+	}
+
+
+	/* Add an active class to the active dropdown button */
+	.active {
+		background-color: green;
+		color: white;
+	}
+
+	/* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
+	.dropdown-container {
+		display: none;
+		background-color: #262626;
+		padding-left: 8px;
+	}
+
+	/* Optional: Style the caret down icon */
+	.fa-caret-down {
+		float: right;
+		padding-right: 8px;
+	}
+
+	/* Position and style the close button (top right corner) */
+	.sidenav .closebtn {
+		position: absolute;
+		top: 0;
+		/*right: 25px; */
+		font-size: 36px;
+		margin-left: 200px;
+	}
+
+	/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+	#main {
+		transition: margin-left .5s;
+		padding: 20px;
+	}
+</style>
+
+</html>
