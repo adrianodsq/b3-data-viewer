@@ -107,6 +107,25 @@ public class B3DataController {
         return ResponseEntity.ok(results);
     }
 
+    // curl -X POST http://localhost:8080/b3/import-all-by-date/{$dateStr}
+    @PostMapping("/import-all-by-date/{dateStr}")
+    public ResponseEntity<List<ImportDataResult>> importAllByDate(@PathVariable("dateStr") String dateStr){
+        List<ImportDataResult> results = Lists.newArrayList();
+        List<Path> filesToProcess = Lists.newArrayList();
+        try (Stream<Path> paths = Files.walk(Paths.get(baseFolder), 1)) {
+            filesToProcess = paths
+                    .filter(Files::isRegularFile)
+                    .filter(f -> !f.toFile().isDirectory() && (f.getFileName().toString().contains(dateStr)))
+                    .sorted(Comparator.comparing(p -> p.toFile().getName()))
+                    .collect(Collectors.toList());
+
+            filesToProcess.forEach(f -> statusInvestLayoutParser.importDataFromFile(f.toFile()));
+        } catch (IOException ioEx) {
+            log.error("Failed to create list of response files", ioEx);
+        }
+        return ResponseEntity.ok(results);
+    }
+
     // curl http://localhost:8080/b3/tickers
     @GetMapping("/tickers")
     public ResponseEntity<List<String>> getAllTickers(){
