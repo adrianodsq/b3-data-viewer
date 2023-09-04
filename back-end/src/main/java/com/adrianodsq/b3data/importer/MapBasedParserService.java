@@ -1,6 +1,7 @@
 package com.adrianodsq.b3data.importer;
 
 import com.google.common.base.Strings;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Component
+@Slf4j
 public class MapBasedParserService {
 
     @Autowired
@@ -24,7 +26,8 @@ public class MapBasedParserService {
         }else{
             FinancialDataParser parser = parserByFinancialTypeMap.get(financialType.toUpperCase());
             if(parser == null){
-                throw new NoSuchElementException("");
+                log.error("Failed to find parser type={}", financialType);
+                throw new NoSuchElementException(financialType);
             }else{
                 return parser;
             }

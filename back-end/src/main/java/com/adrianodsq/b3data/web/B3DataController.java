@@ -90,13 +90,31 @@ public class B3DataController {
 
     // curl -X POST http://localhost:8080/b3/{type}/import-all
     @PostMapping("/{type}/import-all")
-    public ResponseEntity<List<ImportDataResult>> importAll(@PathVariable("type") String fileType){
+    public ResponseEntity<List<ImportDataResult>> importAllByType(@PathVariable("type") String fileType){
         List<ImportDataResult> results = Lists.newArrayList();
         List<Path> filesToProcess = Lists.newArrayList();
         try (Stream<Path> paths = Files.walk(Paths.get(baseFolder), 1)) {
             filesToProcess = paths
                     .filter(Files::isRegularFile)
                     .filter(f -> !f.toFile().isDirectory() && (f.getFileName().toString().contains(fileType)))
+                    .sorted(Comparator.comparing(p -> p.toFile().getName()))
+                    .collect(Collectors.toList());
+
+            filesToProcess.forEach(f -> statusInvestLayoutParser.importDataFromFile(f.toFile()));
+        } catch (IOException ioEx) {
+            log.error("Failed to create list of response files", ioEx);
+        }
+        return ResponseEntity.ok(results);
+    }
+
+    @PostMapping("/import-all")
+    public ResponseEntity<List<ImportDataResult>> importAll(){
+        List<ImportDataResult> results = Lists.newArrayList();
+        List<Path> filesToProcess = Lists.newArrayList();
+        try (Stream<Path> paths = Files.walk(Paths.get(baseFolder), 1)) {
+            filesToProcess = paths
+                    .filter(Files::isRegularFile)
+                    .filter(f -> !f.toFile().isDirectory())
                     .sorted(Comparator.comparing(p -> p.toFile().getName()))
                     .collect(Collectors.toList());
 
